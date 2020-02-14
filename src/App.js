@@ -1,11 +1,9 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import Form from "./components/Form";
 
 class App extends React.Component {
   state = {
-    messages: [],
-    value: ""
+    messages: []
   };
 
   stream = new EventSource("http://localhost:4000/stream");
@@ -15,7 +13,7 @@ class App extends React.Component {
       const { data } = event;
 
       const action = JSON.parse(data);
-      console.log("parsed test", action);
+      console.log("action test:", action);
 
       const { type, payload } = action;
 
@@ -31,39 +29,17 @@ class App extends React.Component {
     };
   }
 
-  clear = () => {
-    this.setState({ value: "" });
-  };
-
-  onChange = event => {
-    const { value } = event.target;
-
-    this.setState({ value });
-  };
-
-  onSubmit = event => {
-    event.preventDefault();
-    console.log("submitted");
-  };
-
   render() {
+    console.log("render state test:", this.state);
     const paragraphs = this.state.messages.map(message => (
       <p key={message.id}>{message.text}</p>
     ));
 
     return (
-      <div className="App">
-        <p>Yo!</p>
-        <form onSubmit={this.onSubmit}>
-          <input
-            value={this.state.value}
-            onChange={this.onChange}
-            type="text"
-          />{" "}
-          <button>submit</button>
-        </form>
+      <div>
+        <Form resource="channel" />
 
-        <button onClick={this.clear}>clear</button>
+        <Form resource="message" />
 
         {paragraphs}
       </div>
